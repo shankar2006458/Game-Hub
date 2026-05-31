@@ -1362,20 +1362,28 @@
                     const video = container.querySelector('[data-featured-video]');
                     const thumb = container.querySelector('.thumb-img');
                     if (eyeBtn && video && thumb) {
+
                         eyeBtn.addEventListener('click', function(e) {
                             e.stopPropagation();
-                            if (video.paused || video.style.opacity === '0') {
-                                thumb.style.opacity = '0';
-                                video.style.opacity = '1';
-                                video.play().catch(() => {});
-                                eyeBtn.innerHTML = '⏸️';
-                            } else {
-                                video.pause();
-                                video.style.opacity = '0';
-                                thumb.style.opacity = '1';
-                                eyeBtn.innerHTML = '👁️';
-                            }
+
+                            thumb.style.opacity = '0';
+                            video.style.opacity = '1';
+
+                            video.play().catch(() => {});
+
+                            eyeBtn.style.display = 'none';
                         });
+
+                        video.addEventListener('click', function() {
+
+                            video.pause();
+
+                            video.style.opacity = '0';
+                            thumb.style.opacity = '1';
+
+                            eyeBtn.style.display = 'flex';
+                        });
+
                     }
                     const playBtn = container.querySelector('[data-featured-play]');
                     if (playBtn) {
@@ -1479,6 +1487,8 @@
                     const vc = card.querySelector('.vid-wrap');
                     const video = vc?.querySelector('[data-video]');
                     const thumb = vc?.querySelector('.thumb-img');
+                    // Eye button
+                    const eyeBtn = card.querySelector('[data-eye]');
                     // Preload video
                     if (video) {
                         video.preload = 'metadata';
@@ -1487,36 +1497,55 @@
                     if (vc && video && thumb && !isTouchDevice) {
                         vc.addEventListener('mouseenter', () => {
                             video.dataset.hover = 'true';
+
                             thumb.style.opacity = '0';
                             video.style.opacity = '1';
+
                             video.play().catch(() => {});
+
+                            // Hide eye icon
+                            if (eyeBtn) eyeBtn.style.display = 'none';
                         });
+
                         vc.addEventListener('mouseleave', () => {
                             video.dataset.hover = 'false';
+
                             video.pause();
+
                             video.style.opacity = '0';
                             thumb.style.opacity = '1';
+
+                            // Show eye icon again
+                            if (eyeBtn) eyeBtn.style.display = 'flex';
                         });
                     }
-                    // Eye button
-                    const eyeBtn = card.querySelector('[data-eye]');
+
                     if (eyeBtn && video && thumb) {
+
                         eyeBtn.addEventListener('click', function(e) {
                             e.stopPropagation();
-                            if (video.paused || video.style.opacity === '0') {
-                                video.dataset.hover = 'true';
-                                thumb.style.opacity = '0';
-                                video.style.opacity = '1';
-                                video.play().catch(() => {});
-                                eyeBtn.innerHTML = '⏸️';
-                            } else {
-                                video.dataset.hover = 'false';
-                                video.pause();
-                                video.style.opacity = '0';
-                                thumb.style.opacity = '1';
-                                eyeBtn.innerHTML = '👁️';
-                            }
+
+                            thumb.style.opacity = '0';
+                            video.style.opacity = '1';
+
+                            video.play().catch(() => {});
+
+                            // Hide eye icon
+                            eyeBtn.style.display = 'none';
                         });
+
+                        video.addEventListener('click', function(e) {
+                            e.stopPropagation();
+
+                            video.pause();
+
+                            video.style.opacity = '0';
+                            thumb.style.opacity = '1';
+
+                            // Show eye icon again
+                            eyeBtn.style.display = 'flex';
+                        });
+
                     }
                     // Buttons
                     card.querySelector('[data-play]')?.addEventListener('click', function(e) {
