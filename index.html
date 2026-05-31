@@ -727,12 +727,12 @@
                     <!-- Quick Stats -->
                     <div class="hidden md:flex flex-wrap gap-5 mt-10 justify-center lg:justify-start" id="heroStats">
                         <div class="text-center min-w-[80px]">
-                            <span class="block text-3xl font-display font-extrabold text-neon stat-num" data-target="15">0</span>
+                            <span class="block text-3xl font-display font-extrabold text-neon stat-num" data-target="10">0</span>
                             <span class="text-neon text-lg font-bold">+</span>
                             <p class="text-xs text-gray-500 mt-1">Games Built</p>
                         </div>
                         <div class="text-center min-w-[80px]">
-                            <span class="block text-3xl font-display font-extrabold text-neon stat-num" data-target="10000" data-suffix="K+">0</span>
+                            <span class="block text-3xl font-display font-extrabold text-neon stat-num" data-target="20000" data-suffix="K+">0</span>
                             <p class="text-xs text-gray-500 mt-1">Total Plays</p>
                         </div>
                         <div class="text-center min-w-[80px]">
@@ -886,12 +886,12 @@
         <div class="glass-panel my-14 p-8 md:p-10 text-center reveal" id="stats-section">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div>
-                    <span class="block text-4xl md:text-5xl font-display font-extrabold text-neon stat-count" data-target="15">0</span>
+                    <span class="block text-4xl md:text-5xl font-display font-extrabold text-neon stat-count" data-target="10">0</span>
                     <span class="text-neon text-xl font-bold">+</span>
                     <p class="text-sm text-gray-500 mt-2">🎮 Games Built</p>
                 </div>
                 <div>
-                    <span class="block text-4xl md:text-5xl font-display font-extrabold text-neon stat-count" data-target="10000" data-suffix="K+">0</span>
+                    <span class="block text-4xl md:text-5xl font-display font-extrabold text-neon stat-count" data-target="20000" data-suffix="K+">0</span>
                     <p class="text-sm text-gray-500 mt-2">👥 Total Plays</p>
                 </div>
                 <div>
@@ -1361,6 +1361,32 @@
                     const eyeBtn = container.querySelector('[data-featured-eye]');
                     const video = container.querySelector('[data-featured-video]');
                     const thumb = container.querySelector('.thumb-img');
+                    const videoWrap = container.querySelector('.vid-wrap');
+
+                    if (videoWrap && video && thumb && !isTouchDevice) {
+
+                        videoWrap.addEventListener('mouseenter', () => {
+
+                            thumb.style.opacity = '0';
+                            video.style.opacity = '1';
+
+                            video.play().catch(() => {});
+
+                            if (eyeBtn) eyeBtn.style.display = 'none';
+                        });
+
+                        videoWrap.addEventListener('mouseleave', () => {
+
+                            video.pause();
+
+                            video.style.opacity = '0';
+                            thumb.style.opacity = '1';
+
+                            if (eyeBtn) eyeBtn.style.display = 'flex';
+                        });
+
+                    }
+
                     if (eyeBtn && video && thumb) {
 
                         eyeBtn.addEventListener('click', function(e) {
@@ -1487,6 +1513,7 @@
                     const vc = card.querySelector('.vid-wrap');
                     const video = vc?.querySelector('[data-video]');
                     const thumb = vc?.querySelector('.thumb-img');
+                    
                     // Eye button
                     const eyeBtn = card.querySelector('[data-eye]');
                     // Preload video
@@ -1732,18 +1759,6 @@
             document.getElementById('resumeBtn')?.addEventListener('click', function(e) {
                 e.preventDefault();
                 alert('📄 Resume download would start here!\n\n(In production, this downloads a PDF.)');
-            });
-
-            // ════════════════ KEYBOARD ════════════════
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && expandedCardId !== null) {
-                    const card = document.querySelector(`.game-card[data-game-id="${expandedCardId}"]`);
-                    if (card) {
-                        const panel = card.querySelector('[data-expand]');
-                        if (panel) panel.classList.remove('open');
-                        expandedCardId = null;
-                    }
-                }
             });
 
             // ════════════════ INIT ════════════════
