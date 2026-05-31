@@ -781,7 +781,7 @@
                 </div>
                 <div class="flex flex-wrap justify-center lg:justify-start gap-2" id="filterChips">
                     <button class="filter-chip active" data-filter="all">All</button>
-                    <button class="filter-chip" data-filter="typing">⌨️ Typing</button>
+                    <button class="filter-chip" data-filter="word">⌨️ Word</button>
                     <button class="filter-chip" data-filter="puzzle">🧩 Puzzle</button>
                     <button class="filter-chip" data-filter="arcade">🕹️ Arcade</button>
                     <button class="filter-chip" data-filter="firebase">🔥 Firebase</button>
@@ -962,7 +962,8 @@
                     'Score tracking',
                     'Responsive design'
                 ],
-                url: 'https://shankar2006458.github.io/Memory-Match/'
+                url: 'https://shankar2006458.github.io/Memory-Match/',
+                github: 'https://github.com/shankar2006458/Memory-Match'
             },
 
             {
@@ -989,7 +990,8 @@
                     'Score system',
                     'Mobile friendly'
                 ],
-                url: 'https://shankar2006458.github.io/EmojiDrop/'
+                url: 'https://shankar2006458.github.io/EmojiDrop/',
+                github: 'https://github.com/shankar2006458/EmojiDrop'
             },
 
             {
@@ -1015,7 +1017,8 @@
                     'Clean UI',
                     'Progressive difficulty'
                 ],
-                url: 'https://shankar2006458.github.io/Color-Ring-Sort/'
+                url: 'https://shankar2006458.github.io/Color-Ring-Sort/',
+                github: 'https://github.com/shankar2006458/Color-Ring-Sort'
             },
 
             {
@@ -1042,7 +1045,8 @@
                     'Responsive controls',
                     'Smooth animations'
                 ],
-                url: 'https://shankar2006458.github.io/Snake-game/'
+                url: 'https://shankar2006458.github.io/Snake-game/',
+                github: 'https://github.com/shankar2006458/Snake-game'
             },
 
             {
@@ -1071,7 +1075,8 @@
                     'Score system',
                     'Multiple categories'
                 ],
-                url: 'https://shankar2006458.github.io/Word-Scramble/'
+                url: 'https://shankar2006458.github.io/Word-Scramble/',
+                github: 'https://github.com/shankar2006458/Word-Scramble'
             },
 
             {
@@ -1080,7 +1085,7 @@
                 description: 'Interactive quiz experience across multiple topics.',
                 fullDesc: 'Test your knowledge with engaging quizzes featuring multiple categories, instant feedback, and score tracking.',
                 genre: 'Quiz',
-                category: 'quiz',
+                category: 'productivity',
                 difficulty: 'Medium',
                 playCount: 14300,
                 rating: 4.9,
@@ -1098,7 +1103,8 @@
                     'Score tracking',
                     'Responsive design'
                 ],
-                url: 'https://shankar2006458.github.io/QuizNova/'
+                url: 'https://shankar2006458.github.io/QuizNova/',
+                github: 'https://github.com/shankar2006458/QuizNova'
             },
 
             {
@@ -1125,7 +1131,8 @@
                     'Progressive challenges',
                     'Fun gameplay'
                 ],
-                url: 'https://shankar2006458.github.io/Guess-the-Gibberish/'
+                url: 'https://shankar2006458.github.io/Guess-the-Gibberish/',
+                github: 'https://github.com/shankar2006458/Guess-the-Gibberish'
             },
 
             {
@@ -1134,7 +1141,7 @@
                 description: 'The classic strategy game.',
                 fullDesc: 'Play against friends or AI in a polished version of the classic Tic Tac Toe game.',
                 genre: 'Strategy',
-                category: 'strategy',
+                category: 'firebase',
                 difficulty: 'Easy',
                 playCount: 600,
                 rating: 4.6,
@@ -1152,7 +1159,8 @@
                     'Scoreboard',
                     'Responsive layout'
                 ],
-                url: 'https://shankar2006458.github.io/tic-tac-toe/'
+                url: 'https://shankar2006458.github.io/tic-tac-toe/',
+                github: 'https://github.com/shankar2006458/tic-tac-toe'
             },
 
             {
@@ -1179,7 +1187,8 @@
                     'Score tracking',
                     'Educational gameplay'
                 ],
-                url: 'https://shankar2006458.github.io/Math-Blaster/'
+                url: 'https://shankar2006458.github.io/Math-Blaster/',
+                github: 'https://github.com/shankar2006458/Math-Blaster'
             },
 
             {
@@ -1206,7 +1215,8 @@
                     'Multiple difficulty levels',
                     'Thrilling gameplay'
                 ],
-                url: 'https://shankar2006458.github.io/BombDefuse/'
+                url: 'https://shankar2006458.github.io/BombDefuse/',
+                github: 'https://github.com/shankar2006458/BombDefuse'
             }
             ];
 
@@ -1228,101 +1238,101 @@
             function diffColor(d) { return d === 'Easy' ? '#4ade80' : d === 'Medium' ? '#facc15' : '#f87171'; }
 
             // ════════════════ MODAL FUNCTIONS ════════════════
-const modal = document.getElementById('gameModal');
-let currentModalGame = null;
+            const modal = document.getElementById('gameModal');
+            let currentModalGame = null;
 
-function openModal(gameId) {
-    const game = gamesData.find(g => g.id === gameId);
-    if (!game) return;
-    
-    currentModalGame = game;
-    
-    // Set modal content
-    document.getElementById('modalTitle').textContent = game.title;
-    document.getElementById('modalThumb').src = game.thumbnail;
-    document.getElementById('modalDescription').textContent = game.fullDesc;
-    document.getElementById('modalGenre').textContent = game.genre;
-    document.getElementById('modalRating').textContent = '⭐ ' + game.rating;
-    document.getElementById('modalPlays').textContent = formatPlays(game.playCount);
-    
-    // Set difficulty with color
-    const diffSpan = document.getElementById('modalDifficulty');
-    diffSpan.textContent = game.difficulty;
-    diffSpan.style.color = diffColor(game.difficulty);
-    
-    // Features list
-    const featuresList = document.getElementById('modalFeatures');
-    featuresList.innerHTML = game.features.map(f => `<li>${f}</li>`).join('');
-    
-    // Tech stack
-    const techContainer = document.getElementById('modalTech');
-    techContainer.innerHTML = game.tech.map(t => 
-        `<span class="text-xs px-2 py-1 rounded-md font-medium" style="background:rgba(139,92,246,0.15); color:#c4b5fd; border:1px solid rgba(139,92,246,0.25);">${t}</span>`
-    ).join('');
-    
-    // Screenshots
-    const screenshotsContainer = document.getElementById('modalScreenshots');
-    screenshotsContainer.innerHTML = game.screenshots.map(s => 
-        `<img src="${s}" alt="Screenshot" class="w-32 h-20 rounded-lg object-cover border border-white/10 hover:border-accent/50 transition-all cursor-pointer" loading="lazy">`
-    ).join('');
-    
-    // Add click handlers for screenshots in modal
-    screenshotsContainer.querySelectorAll('img').forEach(img => {
-        img.addEventListener('click', () => {
-            window.open(img.src, '_blank');
-        });
-    });
-    
-    modal.classList.remove('hidden');
-    modal.classList.remove('closing');
+            function openModal(gameId) {
+                const game = gamesData.find(g => g.id === gameId);
+                if (!game) return;
+                
+                currentModalGame = game;
+                
+                // Set modal content
+                document.getElementById('modalTitle').textContent = game.title;
+                document.getElementById('modalThumb').src = game.thumbnail;
+                document.getElementById('modalDescription').textContent = game.fullDesc;
+                document.getElementById('modalGenre').textContent = game.genre;
+                document.getElementById('modalRating').textContent = '⭐ ' + game.rating;
+                document.getElementById('modalPlays').textContent = formatPlays(game.playCount);
+                
+                // Set difficulty with color
+                const diffSpan = document.getElementById('modalDifficulty');
+                diffSpan.textContent = game.difficulty;
+                diffSpan.style.color = diffColor(game.difficulty);
+                
+                // Features list
+                const featuresList = document.getElementById('modalFeatures');
+                featuresList.innerHTML = game.features.map(f => `<li>${f}</li>`).join('');
+                
+                // Tech stack
+                const techContainer = document.getElementById('modalTech');
+                techContainer.innerHTML = game.tech.map(t => 
+                    `<span class="text-xs px-2 py-1 rounded-md font-medium" style="background:rgba(139,92,246,0.15); color:#c4b5fd; border:1px solid rgba(139,92,246,0.25);">${t}</span>`
+                ).join('');
+                
+                // Screenshots
+                const screenshotsContainer = document.getElementById('modalScreenshots');
+                screenshotsContainer.innerHTML = game.screenshots.map(s => 
+                    `<img src="${s}" alt="Screenshot" class="w-32 h-20 rounded-lg object-cover border border-white/10 hover:border-accent/50 transition-all cursor-pointer" loading="lazy">`
+                ).join('');
+                
+                // Add click handlers for screenshots in modal
+                screenshotsContainer.querySelectorAll('img').forEach(img => {
+                    img.addEventListener('click', () => {
+                        window.open(img.src, '_blank');
+                    });
+                });
+                
+                modal.classList.remove('hidden');
+                modal.classList.remove('closing');
 
-    requestAnimationFrame(() => {
-        modal.classList.add('show');
-    });
+                requestAnimationFrame(() => {
+                    modal.classList.add('show');
+                });
 
-    document.body.style.overflow = 'hidden';
-}
+                document.body.style.overflow = 'hidden';
+            }
 
-function closeModal() {
+            function closeModal() {
 
-    modal.classList.add('closing');
-    modal.classList.remove('show');
+                modal.classList.add('closing');
+                modal.classList.remove('show');
 
-    setTimeout(() => {
-        modal.classList.remove('closing');
-        modal.classList.add('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('closing');
+                    modal.classList.add('hidden');
 
-        document.body.style.overflow = '';
-        currentModalGame = null;
-    }, 350);
+                    document.body.style.overflow = '';
+                    currentModalGame = null;
+                }, 350);
 
-}
+            }
 
-// Modal event listeners
-document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-});
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
-        closeModal();
-    }
-});
+            // Modal event listeners
+            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
 
-// Modal buttons
-document.getElementById('modalPlayBtn').addEventListener('click', () => {
-    if (currentModalGame) {
-        alert(`🎮 Launching ${currentModalGame.title}!`);
-        closeModal();
-    }
-});
+            // Modal buttons
+            document.getElementById('modalPlayBtn').addEventListener('click', () => {
+                if (currentModalGame && currentModalGame.url) {
+                    window.open(currentModalGame.url, '_blank');
+                    closeModal();
+                }
+            });
 
-document.getElementById('modalCodeBtn').addEventListener('click', () => {
-    if (currentModalGame) {
-        window.open('https://github.com/shankar/game-' + currentModalGame.id, '_blank', 'noopener');
-        closeModal();
-    }
-});
+            document.getElementById('modalCodeBtn').addEventListener('click', () => {
+                if (currentModalGame && currentModalGame.github) {
+                    window.open(currentModalGame.github, '_blank');
+                    closeModal();
+                }
+            });
 
             // ════════════════ FEATURED GAME ════════════════
             function renderFeaturedGame() {
@@ -1334,7 +1344,7 @@ document.getElementById('modalCodeBtn').addEventListener('click', () => {
                 <span class="text-xs font-semibold uppercase tracking-widest text-neon mb-3 block">Featured Game</span>
                 <div class="vid-wrap rounded-xl mb-4" style="aspect-ratio: 16/10; cursor: default;">
                   <img src="${featured.thumbnail}" alt="${featured.title}" class="thumb-img" style="opacity:1; position:relative; z-index:2; width:100%; height:100%; object-fit:cover; border-radius:12px;">
-                  <video src="${featured.video}" muted loop playsinline preload="none" style="opacity:0; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:12px; z-index:1;" data-featured-video></video>
+                  <video src="${featured.video}" muted loop playsinline preload="metadata" style="opacity:0; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:12px; z-index:1;" data-featured-video></video>
                   <button class="eye-btn" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;" data-featured-eye>👁️</button>
                 </div>
                 <h3 class="text-xl font-display font-bold text-white mb-1">${featured.title}</h3>
@@ -1369,8 +1379,11 @@ document.getElementById('modalCodeBtn').addEventListener('click', () => {
                     }
                     const playBtn = container.querySelector('[data-featured-play]');
                     if (playBtn) {
-                        playBtn.addEventListener('click', () => alert(
-                            `🚀 Launching ${featured.title}!`));
+                        playBtn.addEventListener('click', () => {
+                            if (featured.url) {
+                                window.open(featured.url, '_blank');
+                            }
+                        });
                     }
                 }, 200);
             }
@@ -1406,7 +1419,7 @@ document.getElementById('modalCodeBtn').addEventListener('click', () => {
                 const dc = diffColor(game.difficulty);
                 wrapper.innerHTML = `
             <div class="vid-wrap">
-              <video src="${game.video}" muted loop playsinline preload="none" data-video style="opacity:0;"></video>
+              <video src="${game.video}" muted loop playsinline preload="metadata" data-video style="opacity:0;"></video>
               <img class="thumb-img" src="${game.thumbnail}" alt="${game.title}" loading="lazy" style="opacity:1;">
               <button class="eye-btn" data-eye aria-label="Preview">👁️</button>
               <div class="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full text-xs font-bold" style="background:${dc}20; color:${dc}; border:1px solid ${dc}40;">${game.difficulty}</div>
@@ -1466,6 +1479,11 @@ document.getElementById('modalCodeBtn').addEventListener('click', () => {
                     const vc = card.querySelector('.vid-wrap');
                     const video = vc?.querySelector('[data-video]');
                     const thumb = vc?.querySelector('.thumb-img');
+                    // Preload video
+                    if (video) {
+                        video.preload = 'metadata';
+                        video.load();
+                    }
                     if (vc && video && thumb && !isTouchDevice) {
                         vc.addEventListener('mouseenter', () => {
                             video.dataset.hover = 'true';
@@ -1503,12 +1521,23 @@ document.getElementById('modalCodeBtn').addEventListener('click', () => {
                     // Buttons
                     card.querySelector('[data-play]')?.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        alert(`🎮 Launching game #${this.getAttribute('data-play')}!`);
+
+                        const gameId = parseInt(this.getAttribute('data-play'));
+                        const game = gamesData.find(g => g.id === gameId);
+
+                        if (game && game.url) {
+                            window.open(game.url, '_blank');
+                        }
                     });
                     card.querySelector('[data-source]')?.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        window.open('https://github.com/shankar/game-' + this.getAttribute(
-                            'data-source'), '_blank', 'noopener');
+
+                        const gameId = parseInt(this.getAttribute('data-source'));
+                        const game = gamesData.find(g => g.id === gameId);
+
+                        if (game && game.github) {
+                            window.open(game.github, '_blank');
+                        }
                     });
                     card.querySelector('[data-launch]')?.addEventListener('click', function(e) {
                         e.stopPropagation();
