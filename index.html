@@ -659,6 +659,94 @@
             top: 16px;
             margin-left: auto;
         }
+
+        /* Screenshot Fullscreen Viewer */
+        #screenshotViewer {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        #screenshotViewer.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #screenshotViewer .viewer-content {
+            transform: scale(0.9);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+        }
+
+        #screenshotViewer.show .viewer-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .screenshot-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(18, 20, 31, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .screenshot-nav-btn:hover {
+            background: rgba(139, 92, 246, 0.5);
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .screenshot-nav-btn:active {
+            background: rgba(139, 92, 246, 0.6);
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 35px rgba(139, 92, 246, 0.6);
+            transform: translateY(-50%) scale(0.92);
+        }
+
+        .screenshot-nav-btn.prev {
+            left: 16px;
+        }
+
+        .screenshot-nav-btn.next {
+            right: 16px;
+        }
+
+        .screenshot-nav-btn.mobile-glow {
+            background: rgba(139, 92, 246, 0.6);
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 35px rgba(139, 92, 246, 0.6);
+            transition: all 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 1.5s ease-out;
+        }
+
+        @media (max-width: 640px) {
+            .screenshot-nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            .screenshot-nav-btn.prev {
+                left: 8px;
+            }
+            .screenshot-nav-btn.next {
+                right: 8px;
+            }
+        }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -912,6 +1000,39 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Screenshot Fullscreen Viewer -->
+        <div id="screenshotViewer" class="fixed inset-0 z-[60] flex items-center justify-center hidden" style="background: rgba(0,0,0,0.92); backdrop-filter: blur(12px);">
+            <!-- Close button -->
+            <button id="closeScreenshotViewer"
+                class="absolute top-6 right-6 z-20 flex items-center justify-center w-11 h-11 rounded-full text-white text-xl font-bold transition-all duration-300"
+                style="background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2);">
+                ✕
+            </button>
+            
+            <!-- Previous button -->
+            <button class="screenshot-nav-btn prev" id="prevScreenshot">
+                ‹
+            </button>
+            
+            <!-- Image container -->
+            <div class="viewer-content max-w-[90vw] max-h-[85vh] flex items-center justify-center">
+                <img id="screenshotViewerImage" src="" alt="Screenshot" 
+                    class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl"
+                    style="box-shadow: 0 0 60px rgba(139,92,246,0.2);">
+            </div>
+            
+            <!-- Next button -->
+            <button class="screenshot-nav-btn next" id="nextScreenshot">
+                ›
+            </button>
+            
+            <!-- Image counter -->
+            <div id="screenshotCounter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-sm font-medium px-4 py-2 rounded-full" 
+                style="background: rgba(0,0,0,0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1);">
+                1 / 1
             </div>
         </div>
 
@@ -1380,9 +1501,9 @@
                 ).join('');
                 
                 // Add click handlers for screenshots in modal
-                screenshotsContainer.querySelectorAll('img').forEach(img => {
+                screenshotsContainer.querySelectorAll('img').forEach((img, index) => {
                     img.addEventListener('click', () => {
-                        window.open(img.src, '_blank');
+                        openScreenshotViewer(game.screenshots, index);
                     });
                 });
                 
@@ -1873,6 +1994,120 @@
                     e.preventDefault();
                     document.getElementById('stats-section')?.scrollIntoView({ behavior: 'smooth' });
                 });
+            });
+
+            // ════════════════ SCREENSHOT VIEWER ════════════════
+            let currentScreenshots = [];
+            let currentScreenshotIndex = 0;
+
+            function openScreenshotViewer(screenshots, startIndex) {
+                if (!screenshots || screenshots.length === 0) return;
+                
+                currentScreenshots = screenshots;
+                currentScreenshotIndex = startIndex;
+                
+                updateScreenshotViewer();
+                
+                const viewer = document.getElementById('screenshotViewer');
+                viewer.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    viewer.classList.add('show');
+                });
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeScreenshotViewer() {
+                const viewer = document.getElementById('screenshotViewer');
+                viewer.classList.remove('show');
+                setTimeout(() => {
+                    viewer.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    currentScreenshots = [];
+                    currentScreenshotIndex = 0;
+                }, 350);
+            }
+
+            function updateScreenshotViewer() {
+                const img = document.getElementById('screenshotViewerImage');
+                const counter = document.getElementById('screenshotCounter');
+                
+                if (currentScreenshots.length > 0) {
+                    img.src = currentScreenshots[currentScreenshotIndex];
+                    counter.textContent = `${currentScreenshotIndex + 1} / ${currentScreenshots.length}`;
+                }
+                
+                // Update button visibility
+                const prevBtn = document.getElementById('prevScreenshot');
+                const nextBtn = document.getElementById('nextScreenshot');
+                
+                if (currentScreenshots.length <= 1) {
+                    prevBtn.style.opacity = '0.3';
+                    prevBtn.style.pointerEvents = 'none';
+                    nextBtn.style.opacity = '0.3';
+                    nextBtn.style.pointerEvents = 'none';
+                } else {
+                    prevBtn.style.opacity = currentScreenshotIndex === 0 ? '0.3' : '1';
+                    prevBtn.style.pointerEvents = currentScreenshotIndex === 0 ? 'none' : 'auto';
+                    nextBtn.style.opacity = currentScreenshotIndex === currentScreenshots.length - 1 ? '0.3' : '1';
+                    nextBtn.style.pointerEvents = currentScreenshotIndex === currentScreenshots.length - 1 ? 'none' : 'auto';
+                }
+            }
+
+            function nextScreenshot() {
+                if (currentScreenshotIndex < currentScreenshots.length - 1) {
+                    currentScreenshotIndex++;
+                    updateScreenshotViewer();
+                }
+            }
+
+            function prevScreenshot() {
+                if (currentScreenshotIndex > 0) {
+                    currentScreenshotIndex--;
+                    updateScreenshotViewer();
+                }
+            }
+
+            // Screenshot viewer event listeners
+            document.getElementById('closeScreenshotViewer').addEventListener('click', closeScreenshotViewer);
+            
+            // Add mobile glow effect to navigation buttons
+            const prevBtn = document.getElementById('prevScreenshot');
+            const nextBtn = document.getElementById('nextScreenshot');
+            
+            function addMobileGlow(button) {
+                button.classList.add('mobile-glow');
+                setTimeout(() => {
+                    button.classList.remove('mobile-glow');
+                }, 200);
+            }
+            
+            prevBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                prevScreenshot();
+                if (isTouchDevice) addMobileGlow(this);
+            });
+            
+            nextBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                nextScreenshot();
+                if (isTouchDevice) addMobileGlow(this);
+            });
+
+            // Keyboard navigation for screenshot viewer
+            document.addEventListener('keydown', function(e) {
+                const viewer = document.getElementById('screenshotViewer');
+                if (viewer && !viewer.classList.contains('hidden')) {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        prevScreenshot();
+                    } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        nextScreenshot();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        closeScreenshotViewer();
+                    }
+                }
             });
 
             // ════════════════ RESUME ════════════════
