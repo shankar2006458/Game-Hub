@@ -831,8 +831,41 @@
                     </div>
                     
                     <!-- Modal Thumbnail/Video -->
-                    <div class="rounded-xl overflow-hidden mb-5" style="aspect-ratio: 16/9; background: #0a0c14;">
-                        <img id="modalThumb" src="" alt="Game thumbnail" class="w-full h-full object-cover">
+                    <div class="rounded-xl overflow-hidden mb-5 relative"
+                        style="aspect-ratio:16/9;background:#0a0c14;">
+
+                        <div id="videoLoader"
+                            class="absolute inset-0 hidden items-center justify-center z-20 bg-black/70">
+
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="w-12 h-12 border-4 border-white/20 border-t-violet-500 rounded-full animate-spin"></div>
+
+                                <p class="text-sm text-white/80">
+                                    Loading Preview...
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <img id="modalThumb"
+                            src=""
+                            alt="Game thumbnail"
+                            class="w-full h-full object-cover cursor-pointer">
+
+                            <video id="modalVideo"
+                                class="w-full h-full object-cover hidden cursor-pointer"
+                                muted
+                                loop
+                                playsinline>
+                            </video>
+
+                        <div id="playOverlay"
+                            class="absolute inset-0 flex items-center justify-center cursor-pointer">
+                            <div class="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center text-2xl text-white">
+                                👁️
+                            </div>
+                        </div>
+
                     </div>
                     
                     <!-- Modal Content -->
@@ -1241,6 +1274,64 @@
             const modal = document.getElementById('gameModal');
             let currentModalGame = null;
 
+            document.addEventListener('DOMContentLoaded', () => {
+
+                const thumb = document.getElementById('modalThumb');
+                const video = document.getElementById('modalVideo');
+                const overlay = document.getElementById('playOverlay');
+
+                overlay.addEventListener('click', () => {
+
+                    const loader = document.getElementById('videoLoader');
+
+                    if(loader){
+                        loader.classList.remove('hidden');
+                        loader.classList.add('flex');
+                    }
+
+                    thumb.classList.add('hidden');
+                    overlay.classList.add('hidden');
+
+                    video.classList.remove('hidden');
+
+                    video.play()
+                        .then(() => {
+
+                            const loader = document.getElementById('videoLoader');
+
+                            if(loader){
+                                loader.classList.add('hidden');
+                                loader.classList.remove('flex');
+                            }
+
+                        })
+                        .catch(() => {});
+
+                });
+
+                video.addEventListener('click', () => {
+
+                    video.pause();
+                    video.currentTime = 0;
+
+                    video.classList.add('hidden');
+                    thumb.classList.remove('hidden');
+                    overlay.classList.remove('hidden');
+                });
+
+                video.addEventListener('playing', () => {
+
+                    const loader = document.getElementById('videoLoader');
+
+                    if(loader){
+                        loader.classList.add('hidden');
+                        loader.classList.remove('flex');
+                    }
+
+                });
+
+            });
+
             function openModal(gameId) {
                 const game = gamesData.find(g => g.id === gameId);
                 if (!game) return;
@@ -1249,7 +1340,19 @@
                 
                 // Set modal content
                 document.getElementById('modalTitle').textContent = game.title;
-                document.getElementById('modalThumb').src = game.thumbnail;
+                const thumb = document.getElementById('modalThumb');
+                const video = document.getElementById('modalVideo');
+                const overlay = document.getElementById('playOverlay');
+
+                thumb.src = game.thumbnail;
+
+                video.src = game.video;
+                video.pause();
+                video.currentTime = 0;
+
+                thumb.classList.remove('hidden');
+                overlay.classList.remove('hidden');
+                video.classList.add('hidden');
                 document.getElementById('modalDescription').textContent = game.fullDesc;
                 document.getElementById('modalGenre').textContent = game.genre;
                 document.getElementById('modalRating').textContent = '⭐ ' + game.rating;
@@ -1303,6 +1406,23 @@
                     modal.classList.add('hidden');
 
                     document.body.style.overflow = '';
+                    const video = document.getElementById('modalVideo');
+
+                    if(video){
+                        video.pause();
+                        video.currentTime = 0;
+                        video.classList.add('hidden');
+                    }
+
+                    const thumb = document.getElementById('modalThumb');
+                    const overlay = document.getElementById('playOverlay');
+                    const loader = document.getElementById('videoLoader');
+
+                    thumb.classList.remove('hidden');
+                    overlay.classList.remove('hidden');
+
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
                     currentModalGame = null;
                 }, 350);
 
